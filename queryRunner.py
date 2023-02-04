@@ -2,7 +2,6 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import firestore
-#from firebase import Firebase
 
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://bitebutler-e193b-default-rtdb.firebaseio.com/'})
@@ -41,6 +40,7 @@ class queryRunner:
     def sort_restaurants(self, restaurants):
         # Sort the restaurants based on a combination of ratings, number of reviews, and past choices
         for restaurant in restaurants:
+            print(restaurant)
             total_reviews = restaurant["yelp_review_count"] + restaurant["google_review_count"] + restaurant["trip_review_count"]
             restaurant["score"] = restaurant["rating"] * restaurant["review_count"] / total_reviews
         sorted_restaurants = sorted(restaurants, key=lambda x: x["score"], reverse=True)
@@ -50,30 +50,22 @@ class queryRunner:
         ref = db.reference("/restaurants")
         ref.set(restaurants)
     
-    def combine_restaurants(self, yelp_table, google_table, trip_table):
-        # Combine the restaurants based on a combination of ratings, number of reviews, and past choices
-        combined_restaurants = []
-        for yelp_record in yelp_table:
-            found = False
-            for google_record in google_table:
-                for trip_record in trip_table:
-                    if yelp_record['name'] == google_record['name'] and yelp_record['name'] == trip_record['name']:
-                        combined_record = {
-                            'name': yelp_record['name'],
-                            'yelp_review_count': yelp_record['review_count'],
-                            'google_review_count': google_record['review_count'],
-                            'trip_review_count': trip_record['review_count'],
-                            'image_url': yelp_record['image_url'],
-                            'yelp_rating': yelp_record['rating'],
-                            'google_rating': google_record['rating'],
-                            'trip_rating': trip_record['rating'],
-                        }
-                        combined_restaurants.append(combined_record)
-                        found = True
-                        break
-            if not found:
-                combined_restaurants.append(yelp_record)
-        return combined_restaurants
+    def combine_restaurant_lists(self, yelp_list, tripadvisor_list, google_list):
+        combined_list = []
+        for yelp_item in yelp_list:
+            for tripadvisor_item in tripadvisor_list:
+                for google_item in google_list:
+                    if yelp_item["name"] == tripadvisor_item["name"] == google_item["name"]:
+                        combined_item = {"name": yelp_item["name"],
+                                        "yelp_rating": yelp_item["rating"],
+                                        "tripadvisor_rating": tripadvisor_item["rating"],
+                                        "google_rating": google_item["rating"],
+                                        "yelp_review_count": yelp_item["review_count"],
+                                        "tripadvisor_review_count": tripadvisor_item["review_count"],
+                                        "google_review_count": google_item["review_count"],
+                                        "image_url": yelp_item.get("image_url", google_item.get("image_url", None))}
+                        combined_list.append(combined_item)
+        return combined_list
         
     def main(self):
         """takes input from user, runs yelp query, sorts restaurants, and prints results
@@ -82,15 +74,13 @@ class queryRunner:
         yelpRestaurants = self.run_yelp_query()
         googleRestaurants = self.run_google_query()
         tripRestaurants = self.run_trip_query()
-        print(tripRestaurants)
-        #combined = self.combine_restaurants(yelpRestaurants, googleRestaurants)
-        print("###############################################################################################################")
-        #print(combined)
-        print("###############################################################################################################")
-
-        ##sortedRestaurants = self.sort_restaurants(combined, {})
-        ##for restaurant in sortedRestaurants:
-          ##  print(restaurant["name"], restaurant["score"])
+        combined = self.combine_restaurant_lists(yelpRestaurants, tripRestaurants, googleRestaurants)
+        print(combined)
+        for elem in combined:
+            print(elem)
+        sortedRestaurants = self.sort_restaurants(combined)
+        for restaurant in sortedRestaurants:
+            print(restaurant["name"], restaurant["score"])
         #self.write_restaurants(sortedRestaurants)
         print("done")
 

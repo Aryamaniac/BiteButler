@@ -30,14 +30,12 @@ class googleRestaurantFetcher:
                 name = result["name"]
                 rating = result.get("rating", 0)
                 review_count = result.get("user_ratings_total", 0)
-                image_url = result.get("icon", "")
 
                 # Store the restaurant information in a dictionary
                 restaurant_info = {
                     "name": name,
                     "rating": rating,
                     "review_count": review_count,
-                    "image_url": image_url
                 }
 
                 # Add the dictionary to the list of restaurants

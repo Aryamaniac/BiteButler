@@ -33,9 +33,9 @@ class TripAdvisorRestaurantFetcher:
             rating = item['rating']
             number_of_reviews = item['numberOfReviews']
             restuarants.append({'name': name, 'rating': rating, 'review_count': number_of_reviews})     
-        return(restuarants)
+        print(restuarants)
     
     if __name__=="__main__":
-        fetchItems("Atanta")
+        fetchItems("Atlanta")
         
     

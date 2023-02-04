@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import firestore
-from firebase import Firebase
+#from firebase import Firebase
 
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://bitebutler-e193b-default-rtdb.firebaseio.com/'})
@@ -88,9 +88,9 @@ class queryRunner:
         #print(combined)
         print("###############################################################################################################")
 
-        sortedRestaurants = self.sort_restaurants(combined, {})
-        for restaurant in sortedRestaurants:
-            print(restaurant["name"], restaurant["score"])
+        ##sortedRestaurants = self.sort_restaurants(combined, {})
+        ##for restaurant in sortedRestaurants:
+          ##  print(restaurant["name"], restaurant["score"])
         #self.write_restaurants(sortedRestaurants)
         print("done")
 

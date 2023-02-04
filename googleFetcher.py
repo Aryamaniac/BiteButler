@@ -20,6 +20,9 @@ class googleRestaurantFetcher:
 
             # Initialize the list of restaurants
             restaurants = []
+            
+            #print(data)
+            #print("HERE$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
             # Loop through the list of restaurants
             for result in data["results"]:

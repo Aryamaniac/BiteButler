@@ -26,6 +26,12 @@ class queryRunner:
         yelpRestaurants = yelpFetcher.fetch(self.city, self.state)
         return yelpRestaurants
     
+    def run_google_query(self):
+        from googleFetcher import googleRestaurantFetcher
+        googleFetcher = googleRestaurantFetcher(self.googleAPIkey)
+        googleRestaurants = googleFetcher.fetch(self.city, self.state)
+        return googleRestaurants
+
     def sort_restaurants(self, restaurants, past_choices, rating_weight=0.5, choice_weight=0.5):
         # Sort the restaurants based on a combination of ratings, number of reviews, and past choices
         for restaurant in restaurants:

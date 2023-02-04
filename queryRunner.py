@@ -36,13 +36,13 @@ class queryRunner:
         from tripFetcher import TripAdvisorRestaurantFetcher
         tripFetcher = TripAdvisorRestaurantFetcher()
         tripRestaurants = tripFetcher.fetch(self.city)
+        return tripRestaurants
     
-    def sort_restaurants(self, restaurants, past_choices, rating_weight=0.5, choice_weight=0.5):
+    def sort_restaurants(self, restaurants):
         # Sort the restaurants based on a combination of ratings, number of reviews, and past choices
         for restaurant in restaurants:
-            restaurant["score"] = restaurant["rating"] * rating_weight + restaurant["review_count"] * (1 - rating_weight)
-            if restaurant["name"] in past_choices:
-                restaurant["score"] += past_choices[restaurant["name"]] * choice_weight
+            total_reviews = restaurant["yelp_review_count"] + restaurant["google_review_count"] + restaurant["trip_review_count"]
+            restaurant["score"] = restaurant["rating"] * restaurant["review_count"] / total_reviews
         sorted_restaurants = sorted(restaurants, key=lambda x: x["score"], reverse=True)
         return sorted_restaurants
     

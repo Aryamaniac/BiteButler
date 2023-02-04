@@ -2,6 +2,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import firestore
+import pandas as pd
 
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://bitebutler-e193b-default-rtdb.firebaseio.com/'})
@@ -50,6 +51,18 @@ class queryRunner:
         ref = db.reference("/restaurants")
         ref.set(restaurants)
     
+    #take in 3 lists and turn them into dataframes
+    def listToDataframeAndMerge(self, yelp_list, tripadvisor_list, google_list):
+        #print(yelp_list)
+        yframe = pd.DataFrame(yelp_list)
+        tframe = pd.DataFrame(tripadvisor_list)
+        gframe = pd.DataFrame(google_list)
+        cframe = yframe.merge(tframe, on = "name", how = "outer")
+        fframe = cframe.merge(gframe, on = "name", how = "outer")
+        for col in fframe.columns:
+            print(col)
+        print(fframe.head)
+        
     def combine_restaurant_lists(self, yelp_list, tripadvisor_list, google_list):
         combined_list = []
         for yelp_item in yelp_list:
@@ -74,7 +87,8 @@ class queryRunner:
         yelpRestaurants = self.run_yelp_query()
         googleRestaurants = self.run_google_query()
         tripRestaurants = self.run_trip_query()
-        combined = self.combine_restaurant_lists(yelpRestaurants, tripRestaurants, googleRestaurants)
+        self.listToDataframeAndMerge(yelpRestaurants, tripRestaurants, googleRestaurants)
+        #combined = self.combine_restaurant_lists(yelpRestaurants, tripRestaurants, googleRestaurants)
         print(combined)
         for elem in combined:
             print(elem)

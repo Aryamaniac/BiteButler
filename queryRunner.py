@@ -59,6 +59,7 @@ class queryRunner:
         gframe = pd.DataFrame(google_list)
         cframe = yframe.merge(tframe, on = "name", how = "outer")
         fframe = cframe.merge(gframe, on = "name", how = "outer")
+        #fframe = fframe.dropna()
         for col in fframe.columns:
             print(col)
         print(fframe.head)

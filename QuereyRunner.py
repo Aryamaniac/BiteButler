@@ -37,6 +37,7 @@ yelpFetcher = YelpRestaurantFetcher(yelpAPIkey)
 yelp_restaurants = yelpFetcher.fetch("Atlanta", "GA")
 google_restaurants = yelpFetcher.fetch("Atlanta", "GA")
 
+
 yelp_restaurants = sort_restaurants(yelp_restaurants, {}, 0.5, 0.5)
 google_restaurants = sort_restaurants(google_restaurants, {}, 0.5, 0.5)
 

@@ -89,15 +89,5 @@ class queryRunner:
         googleRestaurants = self.run_google_query()
         tripRestaurants = self.run_trip_query()
         self.listToDataframeAndMerge(yelpRestaurants, tripRestaurants, googleRestaurants)
-        #combined = self.combine_restaurant_lists(yelpRestaurants, tripRestaurants, googleRestaurants)
-        print(combined)
-        for elem in combined:
-            print(elem)
-        sortedRestaurants = self.sort_restaurants(combined)
-        for restaurant in sortedRestaurants:
-            print(restaurant["name"], restaurant["score"])
-        #self.write_restaurants(sortedRestaurants)
-        print("done")
-
 temp = queryRunner()
 temp.main()
